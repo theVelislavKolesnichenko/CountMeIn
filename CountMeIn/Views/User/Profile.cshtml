@@ -1,0 +1,181 @@
+﻿@model CountMeIn.ViewModels.UserItem
+@using PagedList.Mvc;
+@using PagedList;
+@{
+    ViewBag.Title = "Профил";
+}
+@section scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+<fieldset class="margin-left margin-right">
+    @*<legend>UserItem</legend>*@
+
+    <h2>@ViewBag.Title</h2>
+
+    <section class="float-left " style="width: 300px">
+        @if (ViewBag.Message != "")
+        {
+            <div class="goodChenge margin-top">
+                <p style="text-align:center">@ViewBag.Message</p>
+            </div>
+        }
+
+        <div class="circular-image-big center-block margin-top">
+                <img src="@CountMeIn.Configuration.ConfigurationSettings.ImegPath(Model.ProfileImageName, DML.Enums.ImageSize.Big)" alt="Sample Image" />
+        </div>
+
+        <div class="margin-top"></div>
+
+        @*<div class="label display-inline">
+                @Html.Encode(Resources.Common.FirsName):
+            </div>*@
+
+        <div style="text-align:center">
+            <h3>
+                @Html.DisplayFor(model => model.FirstName)
+                @Html.DisplayFor(model => model.LastName)
+            </h3>
+        </div>
+
+
+
+        <div class="cl margin-top"></div>
+
+        @if (CountMeIn.Core.SessionManager.UserID == Model.ID || BLL.PermissionManager.HasPermission(CountMeIn.Core.SessionManager.UserID, DML.Enums.PermissionsItem.CanEditUsers))
+        {
+            <div class="button" style="display:block; margin: 0 50px auto 50px; text-align:center">
+                @Html.ActionLink(Resources.Common.EditProfile, "Edit", new { id = Model.ID })
+            </div>
+        }
+
+    </section>
+
+    <section class="float-left" style="width: 300px; margin-left: 15px">
+
+        <div class="label" style="text-align: center">
+            @Html.Encode(Resources.Common.NextEvent)
+        </div>
+
+        @foreach (var item in Model.JointEvents)
+        {
+            <div class="jointevent margin-top">
+                <div class="display-inline" style="text-align:left; color: black">@item.Name</div>
+                @Html.ActionLink(Resources.Common.View, "EventSingle", "Event", new { id = item.ID }, new { Class = "display-inline float-right", Style = "text-align:right; color: black" })
+                <div class="margin-top" style="text-align:left; color: black">@item.StartTime</div>
+            </div>
+        }
+        @if (Model.JointEvents.Count == 0)
+        {
+            <div class="validation-summary-errors margin-top">
+                <p style="text-align:center">@Html.Encode(Resources.Common.NoNextEvent)</p>
+            </div>
+        }
+        @Html.ActionLink(Resources.Common.MoreEvent, "EventsList", "Event", null, new { Class = "float-right margin-top" })
+
+    </section>
+
+    <section class="float-right" style="width: 300px">
+
+        @*<div class="margin-top center-block ">
+            </div>*@
+        <div class="label" style="text-align: center">
+            @Html.Encode("Групи")
+        </div>
+
+        <div class="cl margin-top"></div>
+        @if (Model.GroupItems.Count == 0 && Model.GroupInviteItems.Count == 0)
+        {
+            if (CountMeIn.Core.SessionManager.UserID == Model.ID)
+            {
+            <div class="validation-summary-errors margin-top">
+                <p style="text-align:center">@Html.Encode(Resources.Common.NotMemberOfGroups)</p>
+            </div>
+            }
+            else 
+            {
+            <div class="validation-summary-errors margin-top">
+                <p style="text-align:center">@Html.Encode(Resources.Common.ThisUserNotMemberOfGroups)</p>
+            </div>
+            }
+        }
+        else
+        {
+            <div id="person-list">
+                <table class="center-block">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="font-weight-bold">
+                                    @Html.Encode(Resources.Common.FirsName)
+                                </div>
+                            </td>
+                            @if (CountMeIn.Core.SessionManager.UserID == Model.ID)
+                            {
+                                <td>
+                                    <div class="font-weight-bold">
+                                        @Html.Encode(Resources.Common.Option)
+                                    </div>
+                                </td>
+                            }
+                        </tr>
+                        @foreach (var item in Model.GroupInviteItems)
+                        {
+                            <tr>
+                                <td>
+                                    <div>
+                                        @Html.ActionLink(item.Group.Name, "GroupDetails", "Group", new { id = item.GroupID }, new { Style = "color: #ffd800" })
+                                    </div>
+                                </td>
+
+                                @if (CountMeIn.Core.SessionManager.UserID == Model.ID)
+                                {
+                                    <td>
+                                        <div class="imgbuttonred" style="display: inline-block">
+                                            @Html.ActionLink("✖", "CancelGroupInvite", "Group", new { id = item.ID }, new { title = Resources.Common.Delete, onclick = "return confirm('Сигурни ли, сте че ще откажете тази покана?');" })
+                                        </div>
+                                        <div class="imgbuttongreen" style="display: inline-block">
+                                            @Html.ActionLink("✔", "JoinAnGroup", "Group", new { groupID = item.GroupID, id = item.ID }, new { title = Resources.Common.Save, onclick = "return confirm('Сигурни ли, сте че ще приемите тази покана?');" })
+                                        </div>
+                                    </td>
+                                }
+                            </tr>
+                        }
+
+                        @foreach (var item in Model.GroupItems)
+                        {
+                            <tr>
+                                <td>
+                                    <div>
+                                        @Html.ActionLink(item.Name, "GroupDetails", "Group", new { id = item.ID }, null)
+                                    </div>
+                                </td>
+
+                                @if (CountMeIn.Core.SessionManager.UserID == Model.ID)
+                                {
+                                    <td>
+                                        <div class="imgbuttonred">
+                                            @Html.ActionLink("✖", "UnsubscribeAnGroup", "Group", new { userId = Model.ID, groupID = item.ID }, new { title = Resources.Common.Delete, onclick = "return confirm('Сигурни ли сте, че искате да напуснете тази група?');" })
+                                        </div>
+                                    </td>
+                                }
+
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+
+        @if (CountMeIn.Core.SessionManager.UserID == Model.ID)
+        {
+            <div class="button" style="display:block; margin: 15px 60px auto 60px; text-align:center">
+                @Html.ActionLink(string.Format("{0} {1}", Resources.Common.Create, Resources.Common.Group.ToLower()), "GroupCreate", "Group")
+            </div>
+        }
+
+    </section>
+
+    <div class="cl"></div>
+
+</fieldset>

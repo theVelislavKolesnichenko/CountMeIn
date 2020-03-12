@@ -1,0 +1,121 @@
+﻿@model PagedList.IPagedList<DML.Event>
+@using PagedList.Mvc;
+
+@{
+    int? FreePlaces = -1;
+    @section scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }
+
+}
+
+<div class="cl"></div>
+
+@foreach (var item in Model)
+{
+    <div class="box-loud" style="margin-top: 20px">
+        <h2>
+            @Html.DisplayFor(modelItem => item.Name)
+        </h2>
+
+        <section class="float-left">
+            <div class="label display-inline">
+                @Html.Encode(Resources.Common.EventLocation):
+            </div>
+            @Html.DisplayFor(modelItem => item.Location)
+
+            <div class="cl margin-top"></div>
+
+            <div class="label display-inline">
+                @Html.Encode(Resources.Common.EventStartTime):
+                @*@Html.DisplayFor(modelItem => item.StartTime.ToString("T"))*@
+            </div>
+            @Html.Encode(item.StartTime.ToString("dd MMM yyyy HH:mm:ss", System.Globalization.CultureInfo.CreateSpecificCulture("bg-BG")))
+            
+            <div class="cl margin-top"></div>
+            
+            @if (item.Group != null)
+            {
+            
+
+            <div class="label display-inline">
+                @Html.Encode(Resources.Common.Group):
+            </div>
+
+            <div class="display-inline">
+                @Html.ActionLink(item.Group.Name, "GroupDetails", "Group", new { id = item.GroupID }, new { Style = "color: #eee; text-decoration: underline;" }) -  
+                @Html.Encode(string.Format("{0} {1}", (item.IsPublic) ? Resources.Common.Public : Resources.Common.NotPublic, Resources.Common.Event.ToLower()))
+            </div>
+            }
+            else
+            {
+            <div class="label display-inline">
+                @Html.Encode(Resources.Common.Event):
+            </div>
+            <div class="display-inline">
+                @Html.Encode((item.IsPublic) ? Resources.Common.Public : Resources.Common.NotPublic)
+            </div> 
+            }
+
+        </section>
+
+        <section class="float-right">
+
+            <div class="float-right">
+
+                @if (item.MaxUsers != null && item.MaxUsers != 0)
+                {
+                    <div class="label display-inline">
+                        @Html.Encode(Resources.Common.EventFreePlaces + ": ")
+                    </div>
+                    FreePlaces = item.MaxUsers - item.UsersToEvents.Count;
+                    @Html.DisplayFor(modelItem => FreePlaces)
+                }
+                else
+                {
+                    <div class="label display-inline">
+                        @Html.Encode(Resources.Common.EventMaxUsers + ": ")
+                    </div>
+                    @Html.Encode(Resources.Common.Unlimited)
+                }
+            </div>
+
+            <div class="cl"></div>
+
+            <div class="float-right">
+
+                @if (item.EndTime.Date < DateTime.Today.Date)
+                {
+                    <div class="validation-summary-errors float-left" style="margin: 15px 10px 0 0; width: auto">
+                        @Html.Encode(Resources.Common.EventOld)
+                    </div>
+                }
+                else if (FreePlaces == 0 && (item.MaxUsers != null && item.MaxUsers != 0))
+                {
+                    <div class="validation-summary-errors float-left" style="margin: 15px 10px 0 0; width: auto">
+                        @Html.Encode(Resources.Common.AllFilled)
+                    </div>
+                }
+                else if (item.StartTime.Date < DateTime.Today.Date || (item.StartTime.Date == DateTime.Today.Date && (item.StartTime.Hour - item.HoursOffset) <= DateTime.Now.Hour))
+                {
+                    <div class="validation-summary-errors float-left" style="margin: 15px 10px 0 0; width: auto">
+                        @Html.Encode(Resources.Common.HoursOffsetOver)
+                    </div>
+                }
+
+                <div class="button">
+                    @Html.ActionLink(Resources.Common.Review, "EventSingle", "Event", new { id = item.ID }, null)
+                </div>
+
+            </div>
+
+            <div class="cl"></div>
+
+        </section>
+
+        <div class="cl"></div>
+
+    </div>
+}
+
+

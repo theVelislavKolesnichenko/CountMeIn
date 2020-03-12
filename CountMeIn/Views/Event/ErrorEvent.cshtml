@@ -1,0 +1,13 @@
+﻿@model System.Web.Mvc.HandleErrorInfo
+
+@{
+    ViewBag.Title = "Error";
+}
+@section scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+<hgroup class="title">
+    <h1 class="error">@Html.Encode(Resources.Common.Error).</h1>
+    <h2 class="error">@Html.Encode(Resources.Common.ErrorNotEvent).</h2>
+</hgroup>

@@ -1,0 +1,319 @@
+﻿@model CountMeIn.ViewModels.GroupItem
+@using PagedList.Mvc;
+
+@{
+    ViewBag.Title = string.Format("{0} : {1}", Resources.Common.Group, Model.Name);
+    bool hasPermission = BLL.PermissionManager.HasPermission(CountMeIn.Core.SessionManager.UserID, DML.Enums.PermissionsItem.CanEditGroup);
+    bool isModerator = BLL.UsersToGroupManager.IsModerator(CountMeIn.Core.SessionManager.UserID, Model.ID);
+}
+@section scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        $("ViewResult").visible = false;
+        $("input:radio[name=radio]").click(function () {
+            var id = @Model.ID
+            $.ajax({
+                url: '/Group/OwnerChange',
+                contentType: 'application/html; charset=utf-8',
+                type: 'GET',
+                data: { id: id, ownerID: $(this).val() },
+                dataType: 'html',
+                success: function (data) {
+                    $('body').html(data);
+                }
+            })
+            //alert($(this).val());
+        })
+
+        $("#item_GroupRoleID").change(function () {
+
+            var value = $(this).val().split(",")
+
+            $.ajax({
+                url: '/Group/UserRoleChange',
+                contentType: 'application/html; charset=utf-8',
+                type: 'GET',
+                data: { id: value[0], userID: value[1], roleID: value[2] },
+                dataType: 'html',
+                success: function (data) {
+                    $("ViewResult").visible = true;
+                    $('#result').html(data);
+                }
+            })
+            //alert($(this).val());
+        })
+
+    </script>
+}
+
+<h2>@ViewBag.Title</h2>
+
+<fieldset>
+
+    @if (ViewBag.Message != "" && !string.IsNullOrEmpty(ViewBag.Message))
+    {
+        <div class="validation-summary-errors width-auto">
+            <p style="text-align:center">@ViewBag.Message</p>
+        </div>
+    }
+
+    <div class="margin-top"></div>
+
+    <p style="text-align:center">
+        @Html.Encode(string.Format("{0} : {1}", "Собственик", Model.OwnerFullName))
+    </p>
+
+    <div>
+
+        @if (Model.OwnerID == CountMeIn.Core.SessionManager.UserID || hasPermission || isModerator)
+        {
+            <section class="float-right padding-right margin-right">
+                @using (Html.BeginForm("AddGroupInvite", "Group", new { id = Model.ID, userID = CountMeIn.Core.SessionManager.UserID }, FormMethod.Post))
+                {
+
+                    @*@Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true)*@
+
+                    <fieldset class="Form">
+
+                        <p style="text-align:center" class="label">
+                            @Html.Encode(Resources.Common.InviteUser)
+                        </p>
+
+                        <div class="label">
+                            @Resources.Common.Email
+                        </div>
+
+                        <div class="display-inline">
+                            @Html.EditorFor(model => model.GroupInviteUserMail)
+                            @Html.ValidationMessageFor(model => model.GroupInviteUserMail)
+                        </div>
+
+                        <input type="submit" value="@Resources.Common.Invite" />
+
+
+                    </fieldset>
+                }
+            </section>
+
+            <section class="float-left padding-left margin-left" style="padding-top: 104px">
+
+                <div class="button @*float-right margin-right*@">
+                    @Html.ActionLink(string.Format("{0} {1}", Resources.Common.Create, Resources.Common.Event.ToLower()), "EventCreate", "Event", new { id = Model.ID }, null)
+                </div>
+
+            </section>
+
+            if (Model.OwnerID == CountMeIn.Core.SessionManager.UserID || hasPermission)
+            {
+                <section class="float-left padding-left margin-left" style="padding-top: 104px">
+
+                    <div class="button @*float-right margin-right*@">
+                        @Html.ActionLink(string.Format("{0} {1}", "Изтри", Resources.Common.Group.ToLower() + "та"), "RemoveGroup", "Group", new { id = Model.ID }, new { onclick = "return confirm('Сигурни ли сте, че искате да изтриете групата?');" })
+                    </div>
+
+                </section>
+            }
+        }
+    </div>
+
+    <div class="cl"></div>
+
+    @if (Model.userItems.Count != 0)
+    {
+        int index = 0;
+
+        <div style="padding-top: 50px"></div>
+
+        <div id="ViewResult" class="goodChenge margin-top">
+            <p id="result" style="text-align:center"></p>
+        </div>
+
+        <div class="margin-top"></div>
+
+        <table class="center-block">
+            <tbody>
+                <tr>
+                    <td>
+                        <div class="font-weight-bold">
+                            @Html.Encode(Resources.Common.Index)
+                        </div>
+                    </td>
+                    <td>
+                        <div class="font-weight-bold">
+                            @Html.Encode(Resources.Common.FirsName)
+                        </div>
+                    </td>
+                    <td>
+                        <div class="font-weight-bold">
+                            @Html.Encode("Състояние")
+                        </div>
+                    </td>
+                    @if (Model.OwnerID == CountMeIn.Core.SessionManager.UserID || hasPermission)
+                    {
+                        <td>
+                            <div class="font-weight-bold">
+                                @Html.Encode("Собственик")
+                            </div>
+                        </td>
+                    }
+                    @if (Model.OwnerID == CountMeIn.Core.SessionManager.UserID || hasPermission)
+                    {
+                        <td>
+                            <div class="font-weight-bold">
+                                @Html.Encode(Resources.Common.Option)
+                            </div>
+                        </td>
+                    }
+                </tr>
+
+                @foreach (var item in Model.userItems)
+                {
+                    <tr class=@((index % 2 == 0) ? "box-loud" : "box-silent")>
+                        <td>
+                            <div>
+                                @Html.Encode(++index)
+                            </div>
+                        </td>
+                        <td>
+                            <div>
+                                @Html.ActionLink(string.Format("{0} {1}", item.FirstName, item.LastName), "Profile", "User", new { id = item.ID }, null)
+                            </div>
+                        </td>
+
+                        @if (item.ID == Model.OwnerID)
+                        {
+                            <td>
+                                <div>
+                                    @Html.Encode(Resources.Common.Moderator)
+                                </div>
+                            </td>
+
+                        }
+                        else if (CountMeIn.Core.SessionManager.UserID == Model.OwnerID || hasPermission)
+                        {
+                            <td>
+                                <div>
+                                    @*@using (Ajax.BeginForm("UserRoleChange", "Group", new { id = Model.ID, userID = item.ID }, new AjaxOptions(), new { id = "AjaxForm" }))
+                                        {*@
+                                    <select @*class="width-auto"*@ data-val="true" id="item_GroupRoleID" name="item.GroupRoleID">
+                                        @foreach (var value in CountMeIn.Configuration.ConfigurationSettings.groupRoleItems)
+                                        {
+                                            if (value.Value.Equals(item.GroupRoleID.ToString()))
+                                            {
+                                                <option selected value="@Model.ID,@item.ID,@value.Value">@value.Text</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@Model.ID,@item.ID,@value.Value">@value.Text</option>
+                                            }
+                                        }
+                                    </select>
+                                    @*}*@
+                                </div>
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                                <div>
+                                    @Html.Encode(CountMeIn.Configuration.ConfigurationSettings.GetGroupRoleBG((DML.Enums.GroupRoles)item.GroupRoleID))
+                                </div>
+                            </td>
+                        }
+
+                        @if (Model.OwnerID == CountMeIn.Core.SessionManager.UserID || hasPermission)
+                        {
+                            <td>
+                                <div class="field display-inline width-auto">
+                                    @Html.RadioButton("radio", item.ID, (Model.OwnerID == item.ID), new { Style = "width: auto; margin: 0px 45px;" })
+                                </div>
+                            </td>
+                        }
+                        @if (Model.OwnerID == CountMeIn.Core.SessionManager.UserID || hasPermission)
+                        {
+                            <td>
+
+                                <div class="imgbuttonred" style="display: inline-block">
+                                    @Html.ActionLink("✖", "RemovalFromGroup", "Group", new { userId = item.ID, groupID = Model.ID }, new { title = Resources.Common.Delete, onclick = "return confirm('Сигурни ли сте, че искате да премахнете този потребител?');" })
+                                </div>
+
+                                @*<div class="imgbuttongreen" style="display: inline-block">
+                                        @Html.ActionLink("✔", "SaveChange", "Group", new { id = Model.ID, ownerID = item.ID }, new { title = Resources.Common.Save })
+                                    </div>*@
+
+                            </td>
+                        }
+                    </tr>
+                }
+
+                @foreach (var item in Model.userGroupInviteItems)
+                {
+                    <tr class=@((index % 2 == 0) ? "box-loud" : "box-silent")>
+                        <td>
+                            <div>
+                                @Html.Encode(++index)
+                            </div>
+                        </td>
+
+                        @{
+                    DML.User user = BLL.UserManager.GetByUsername(item.UserMail);
+                        }
+
+                        <td>
+                            @if ((user) != null)
+                            {
+                                @Html.ActionLink(string.Format("{0} {1}", user.FirstName, user.LastName), "Profile", "User", new { id = user.ID }, null)
+                            }
+                            else
+                            {
+                                <div>
+                                    @Html.Encode(item.UserMail)
+                                </div>
+                            }
+                        </td>
+
+                        <td>
+                            <div>
+                                @Html.Encode(Resources.Common.Invited)
+                            </div>
+                        </td>
+
+                        @if (Model.OwnerID == CountMeIn.Core.SessionManager.UserID || hasPermission)
+                        {
+                            <td></td>
+                            <td>
+                                <div class="imgbuttonred">
+                                    @Html.ActionLink("✖", "ClearGroupInvite", "Group", new { id = item.ID, groupID = item.GroupID }, new { title = Resources.Common.Delete, onclick = "return confirm('Сигурни ли сте, че искате да премахнете този потребител?');" })
+                                </div>
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+    @Html.Partial("Events", Model.groupEvents)
+
+    @if (Model.groupEvents.PageNumber > Model.groupEvents.PageCount || Model.groupEvents.PageCount == 0)
+    {
+        <div class="validation-summary-errors" style="width:auto">
+            <p style="text-align:center"> @Html.Encode(Resources.Common.NonEvents) </p>
+        </div>
+    }
+
+    @if (Model.groupEvents.PageCount > 1)
+    {
+        @Html.PagedListPager(Model.groupEvents, currentPage => Url.Action("GroupDetails", new { id = Model.ID, currentPage }))
+    }
+
+    @if (Model == null)
+    {
+        <div class="validation-summary-errors" style="width:auto">
+            <p style="text-align:center"> @Html.Encode(Resources.Common.NonEvents) </p>
+        </div>
+    }
+
+</fieldset>

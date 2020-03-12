@@ -1,0 +1,59 @@
+﻿@model CountMeIn.ViewModels.UserItem
+
+@{
+    ViewBag.Title = @Resources.Common.Register;
+    //Html.EnableClientValidation(false);
+}
+
+@section scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+<hgroup class="title">
+    <h1>@ViewBag.Title</h1>
+    <h2>@Resources.Common.CreateAccount</h2>
+</hgroup>
+
+@using (Html.BeginForm())
+{
+    
+    <fieldset class="Form">
+    @*@Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)*@
+
+        <div class="label">
+            @Html.Encode(Resources.Common.UserName + "/" + Resources.Common.Email)
+        </div>
+            @Html.TextBoxFor(m => m.UserName)
+            @Html.ValidationMessageFor(m => m.UserName)
+
+        <div class="label">
+            @Html.Encode(Resources.Common.Password)
+        </div>
+            @Html.PasswordFor(m => m.Password)
+            @Html.ValidationMessageFor(m => m.Password)
+
+        <div class="label">
+            @Html.Encode(Resources.Common.ConfirmPassword)
+        </div>
+            @Html.PasswordFor(m => m.ConfirmPassword)
+            @Html.ValidationMessageFor(m => m.ConfirmPassword)
+
+        <div class="label">
+            @Html.Encode(Resources.Common.FirsName)
+        </div>
+            @Html.TextBoxFor(m => m.FirstName)
+            @Html.ValidationMessageFor(m => m.FirstName)
+
+        <div class="label">
+            @Html.Encode(Resources.Common.LastName)
+        </div>
+            @Html.TextBoxFor(m => m.LastName)
+            @Html.ValidationMessageFor(m => m.LastName)
+
+        <input type="submit" value="@Resources.Common.Register" />
+    </fieldset>
+    <div class="cl"></div>
+}
+
+

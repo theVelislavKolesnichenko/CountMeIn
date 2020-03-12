@@ -1,0 +1,36 @@
+﻿@model PagedList.IPagedList<DML.Event>
+@using PagedList.Mvc;
+
+@{
+    ViewBag.Title = Resources.Common.Events;    
+}
+
+<h2>@Html.Encode(Resources.Common.Events)</h2>
+
+@*@if (BLL.PermissionManager.HasPermission(CountMeIn.Core.SessionManager.UserID, DML.Enums.PermissionsItem.CanCreateEvent))
+{
+    <p class="button float-right margin-right">
+        @Html.ActionLink(string.Format("{0} {1}", Resources.Common.Create, Resources.Common.Event.ToLower()), "EventCreate", new { id = 1 })
+    </p>    
+}*@
+
+@Html.Partial("Events")
+
+@if (Model.PageNumber > Model.PageCount || Model.PageCount == 0)
+{
+    <div class="validation-summary-errors" style="width:auto">
+        <p style="text-align:center"> @Html.Encode(Resources.Common.NonEvents) </p>
+    </div>
+}
+
+@if (Model.PageCount > 1)
+{
+    @Html.PagedListPager(Model, currentPage => Url.Action("EventsList", new { currentPage }))
+}
+
+@if (Model == null)
+{
+    <div class="validation-summary-errors" style="width:auto">
+        <p style="text-align:center"> @Html.Encode(Resources.Common.NonEvents) </p>
+    </div>
+}

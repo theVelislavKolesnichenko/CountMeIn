@@ -1,0 +1,38 @@
+﻿@model CountMeIn.ViewModels.UserItem
+
+@{
+    ViewBag.Title = "ChangeFullName";
+}
+
+@*<h2>ChangeFullName</h2>*@
+
+@using (Html.BeginForm("ChangeFullName", "User", FormMethod.Post, new { id = "changeFullNameForm" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset class="editform">
+        <legend>Име</legend>
+
+        <div class="label">
+            @Html.LabelFor(model => model.FirstName)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.FirstName)
+            @Html.ValidationMessageFor(model => model.FirstName)
+        </div>
+
+        <div class="label">
+            @Html.LabelFor(model => model.LastName)
+        </div>
+        <div class="field">
+            @Html.EditorFor(model => model.LastName)
+            @Html.ValidationMessageFor(model => model.LastName)
+        </div>
+
+        @*<p>
+                <input type="submit" value="Save" />
+            </p>*@
+
+    </fieldset>
+}

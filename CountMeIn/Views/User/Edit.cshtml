@@ -1,0 +1,345 @@
+﻿@model CountMeIn.ViewModels.UserItem
+@using CountMeIn.ViewModels
+
+@{
+    ViewBag.Title = "Редактиране";
+    @section scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+        <script type="text/javascript">
+
+            Dropzone.options.dropzoneJsForm = {
+
+                //prevents Dropzone from uploading dropped files immediately
+                autoProcessQueue: true,
+                maxFiles: 1,
+                maxFilesize: 2,
+                dictFileTooBig: "Файла е прекалено голям ({{filesize}}MiB). Максималния размер е: {{maxFilesize}}MiB.",
+                @*addRemoveLinks: true,
+                dictRemoveFile: "@Resources.Common.dropZoneRemoveFile",*@
+                dictCancelUpload: "@Resources.Common.dropZoneCancelUpload",
+                acceptedFiles: "image/*",
+                dictInvalidFileType: "@Resources.Common.dropZoneInvalidFileType",
+                dictMaxFilesExceeded: "@Resources.Common.dropZoneMaxFilesExceeded",
+                dictCancelUploadConfirmation: "@Resources.Common.dropZoneCancelUploadConfirmation",
+                success: function (file, response) {
+                    if (response.code == 501) { // succeeded
+                        return file.previewElement.classList.add("dz-success"); // from source
+                    } else if (response.code == 403) {  //  error
+                        // below is from the source code too
+                        var node, _i, _len, _ref, _results;
+                        var message = response.msg // modify it to your error message
+                        file.previewElement.classList.add("dz-error");
+                        _ref = file.previewElement.querySelectorAll("[data-dz-errormessage]");
+                        _results = [];
+                        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+                            node = _ref[_i];
+                            _results.push(node.textContent = message);
+                        }
+                        return _results;
+                    }
+
+                    return file.previewElement.classList.add("dz-success");
+                },
+                init: function () {
+
+                    //var submitButton = document.querySelector("#submit");
+
+                    var myDropzone = this; //closure
+                    myDropzone.uploadMultiple = false;
+
+                    myDropzone.on("addedfile", function (file) {
+
+                        var removeButton = Dropzone.createElement("<a class=\"dz-remove\">@Resources.Common.dropZoneRemoveFile</a>");
+
+                        var _this = this;
+
+                        removeButton.addEventListener("click", function (e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+
+                            _this.removeFile(file);
+
+                            if (file.status != "error") {
+                                myDropzone.options.maxFiles = 1;
+                                $("#dropzoneJsForm").submit()
+                            }
+                        });
+
+                        file.previewElement.appendChild(removeButton);
+                    });
+
+                    if ("@string.IsNullOrEmpty(Model.ProfileImageName)" == "False") {
+                        var mockFile = { name: "@Model.ProfileImageName", size: 900 };
+
+                        myDropzone.emit("addedfile", mockFile);
+
+                        myDropzone.emit("thumbnail", mockFile, "@CountMeIn.Configuration.ConfigurationSettings.ImegPath(Model.ProfileImageName, DML.Enums.ImageSize.Originals)");
+                        //myDropzone.emit("reset");
+
+                        var existingFileCount = 1;
+                        myDropzone.options.maxFiles = myDropzone.options.maxFiles - existingFileCount;
+                    }
+                }
+            };
+
+        </script>
+    }
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div class="center-block">
+
+    @*@using (Html.BeginForm("ChangeFullName", "User", new { id = Model.ID }, FormMethod.Post, new { id = "changeFullNameForm" }))
+        {*@
+    @using (Html.BeginForm("Edit", "User", new { id = Model.ID }, FormMethod.Post, new { id = "Edit" }))
+    {
+        @*@Html.AntiForgeryToken()
+            @Html.ValidationSummary(true)*@
+
+        <fieldset class="editform">
+            <h4 class="font-weight-bold">@Resources.Common.FirsName</h4>
+
+            <div class="label">
+                @Html.Encode(Resources.Common.FirsName)
+            </div>
+            <div class="editor-field">
+                @*@if (ViewBag.EditFullNameValidator)
+                {*@
+                    @Html.TextBoxFor(model => model.FirstName)
+                    @Html.ValidationMessageFor(model => model.FirstName)
+                @*}
+                else
+                {
+                    @Html.TextBoxFor(model => model.FirstName, htmlAttributes: new { Class = "Empty" })
+                }*@
+
+            </div>
+
+            <div class="label">
+                @Html.Encode(Resources.Common.LastName)
+            </div>
+            <div class="field">
+                @*@if (ViewBag.EditFullNameValidator)
+                {*@
+                    @Html.TextBoxFor(model => model.LastName)
+                    @Html.ValidationMessageFor(model => model.LastName)
+                @*}
+                else
+                {
+                    @Html.TextBoxFor(model => model.LastName, htmlAttributes: new { Class = "Empty" })
+                }*@
+            </div>
+
+        </fieldset>
+        @*}
+
+            @using (Html.BeginForm("ChangeUserName", "User", new { id = Model.ID }, FormMethod.Post, new { id = "changeUserNameForm" }))
+            {*@
+        @*@Html.AntiForgeryToken()
+            @Html.ValidationSummary(true)*@
+
+        <fieldset class="editform">
+            <h4 class="font-weight-bold">@Resources.Common.UserName</h4>
+            <div class="label">
+                @Html.Encode(string.Format("{0} / {1}", Resources.Common.UserName, Resources.Common.Email))
+            </div>
+            <div class="field">
+                @*@if (ViewBag.EditUserNamePasswordValidator)
+                {*@
+                    @Html.TextBoxFor(model => model.UserName)
+                    @Html.ValidationMessageFor(model => model.UserName)
+                @*}
+                else
+                {
+                    @Html.TextBoxFor(model => model.UserName, htmlAttributes: new { Class = "Empty" })
+                    @Html.EditorFor(model => model.UserName)
+                }*@
+
+            </div>
+
+            @if (!BLL.PermissionManager.HasPermission(CountMeIn.Core.SessionManager.UserID, DML.Enums.PermissionsItem.CanEditUsers) || CountMeIn.Core.SessionManager.UserID == Model.ID)
+            {
+                <div class="label">
+                    @Html.Encode(Resources.Common.Password)
+                </div>
+                <div class="editor-field">
+                    @*@if (ViewBag.EditUserNamePasswordValidator)
+                    {*@
+                        @Html.PasswordFor(model => model.Password)
+                        @Html.ValidationMessageFor(model => model.Password)
+                    @*}
+                    else
+                    {
+                        @Html.PasswordFor(model => model.Password, htmlAttributes: new { Class = "Empty" })
+                    }*@
+                </div>
+            }
+
+        </fieldset>
+        @*}
+
+            @using (Html.BeginForm("ChangePassword", "User", new { id = Model.ID }, FormMethod.Post, new { id = "changePasswordForm" }))
+            {*@
+
+        <fieldset class="editform">
+            <h4 class="font-weight-bold">@Resources.Common.Password</h4>
+
+            @*@if (!BLL.PermissionManager.HasPermission(CountMeIn.Core.SessionManager.UserID, DML.Enums.PermissionsItem.CanEditUsers) || CountMeIn.Core.SessionManager.UserID == Model.ID)
+                {
+                    <div class="label">
+                        @Html.Encode(Resources.Common.Password)
+                    </div>
+                    <div class="editor-field">
+                        @if (ViewBag.EditChangePasswordValidator)
+                        {
+                            @Html.PasswordFor(model => model.Password)
+                            @Html.ValidationMessageFor(model => model.Password)
+                        }
+                        else
+                        {
+                            @Html.PasswordFor(model => model.Password, htmlAttributes: new { Class = "Empty" })
+                        }
+                    </div>
+                }*@
+
+            <div class="label">
+                @Html.Encode(Resources.Common.NewPassword)
+            </div>
+            <div class="editor-field">
+                @*@if (ViewBag.EditChangePasswordValidator)
+                {*@
+                    @Html.PasswordFor(model => model.NewPassword)
+                    @Html.ValidationMessageFor(model => model.NewPassword)
+                @*}
+                else
+                {
+                    @Html.PasswordFor(model => model.NewPassword, htmlAttributes: new { Class = "Empty" })
+                }*@
+            </div>
+
+            <div class="label">
+                @Html.Encode(Resources.Common.ConfirmPassword)
+            </div>
+            <div class="field">
+                @if (ViewBag.EditChangePasswordValidator)
+                {
+                    @Html.PasswordFor(model => model.ConfirmPassword)
+                    @Html.ValidationMessageFor(model => model.ConfirmPassword)
+                }
+                else
+                {
+                    @Html.PasswordFor(model => model.ConfirmPassword, htmlAttributes: new { Class = "Empty" })
+                }
+
+            </div>
+        </fieldset>
+    }
+
+    <div class="cl margin-top"></div>
+
+    <div class="editbutton">
+        @Html.ActionLink(Resources.Common.Save, "Edit", null, new { href = "javascript: document.getElementById('Edit').submit()" })
+    </div>
+
+    @*<div class="editbutton">
+            @Html.ActionLink(Resources.Common.Save, "ChangePassword", null, new { href = "javascript: document.getElementById('changePasswordForm').submit()" })
+        </div>
+
+        <div class="editbutton">
+            @Html.ActionLink(Resources.Common.Save, "ChangeUserName", null, new { href = "javascript: document.getElementById('changeUserNameForm').submit()" })
+        </div>
+
+        <div class="editbutton">
+            @Html.ActionLink(Resources.Common.Save, "ChangeFullName", null, new { href = "javascript: document.getElementById('changeFullNameForm').submit()" })
+        </div>*@
+
+</div>
+
+<div class="cl"></div>
+
+@* IMAGES *@
+
+<div class="center-block">
+    <fieldset class="editform margin-top" style="margin-left: 70px">
+        <h4 class="font-weight-bold" style="margin-bottom: 20px;">
+            @Html.Encode(Resources.Common.EditProfile)
+        </h4>
+        @using (Html.BeginForm("UploadImage", "User", new { Model.ID }, FormMethod.Post, new { enctype = "multipart/form-data", Class = "dropzone dropZone center-block", id = "dropzoneJsForm" }))
+        {
+            if (string.IsNullOrEmpty(Model.ProfileImageName))
+            {
+                <div class="dz-message" style="text-align: center; margin-top: 7px;">
+                    <span style="color: #0d9d07">
+                        @Html.Encode(Resources.Common.UploadImage)
+                    </span>
+                </div>
+            }
+        }
+    </fieldset>
+
+    <div class="cl"></div>
+
+    @*<div class="editbutton " style="margin-right: 650px">
+            <a href="#" id="submit">@Resources.Common.Save</a>
+        </div>*@
+</div>
+
+<div class="cl"></div>
+
+@* ADMIN *@
+
+<div class="center-block margin-top">
+
+    @if (BLL.PermissionManager.HasPermission(CountMeIn.Core.SessionManager.UserID, DML.Enums.PermissionsItem.CanCreateAdmin))
+    {
+
+
+        <h4 class="font-weight-bold">@Resources.Common.SpecialSettings</h4>
+
+        using (Html.BeginForm("ChangeUserType", "User", new { id = Model.ID }, FormMethod.Post, new { id = "ChangeUserType" }))
+        {
+            @*@Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)*@
+
+            <fieldset class="editform">
+                <div class="label">
+                    @Html.Encode(Resources.Common.UserType)
+                </div>
+                @Html.DropDownListFor(model => model.UserTypeID, CountMeIn.Configuration.ConfigurationSettings.userTypeItems)
+            </fieldset>
+        }
+
+        bool canDeleteUsers = BLL.PermissionManager.HasPermission(CountMeIn.Core.SessionManager.UserID, DML.Enums.PermissionsItem.CanDeleteUsers);
+
+        if (canDeleteUsers && Model.ID != CountMeIn.Core.SessionManager.UserID)
+        {
+            using (Html.BeginForm("DeleteUser", "User", new { id = Model.ID }, FormMethod.Get, new { id = "DeleteUser" }))
+            {
+                <fieldset class="editform">
+                    <div class="label">
+                        @Html.Encode(Resources.Common.UserDelete)
+                    </div>
+                </fieldset>
+            }
+        }
+
+        <div class="cl margin-top"></div>
+
+        <div class="editbutton float-left">
+            @Html.ActionLink(Resources.Common.Save, "ChangeUserType", null, new { href = "javascript: document.getElementById('ChangeUserType').submit()" })
+        </div>
+
+        if (canDeleteUsers && Model.ID != CountMeIn.Core.SessionManager.UserID)
+        {
+            <div class="editbutton float-left">
+                @Html.ActionLink(Resources.Common.Delete, "DeleteUser", null, new { href = "javascript: if(confirm('Сигурни ли сте, че искате да изтриете този потребител?')){ document.getElementById('DeleteUser').submit() };" })
+            </div>
+        }
+
+    }
+
+</div>
+
+<div class="cl margin-top"></div>
+

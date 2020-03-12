@@ -1,0 +1,33 @@
+﻿@model CountMeIn.ViewModels.UserItem
+
+@{
+    ViewBag.Title = "ChangeUserName";
+}
+
+@*<h2>ChangeUserName</h2>*@
+
+@using (Html.BeginForm("ChangeUserName", "User", FormMethod.Post, new { id = "changeUserNameForm" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset class="editform">
+        <legend>Потребителско Име</legend>
+        <div class="label">
+            @Html.LabelFor(model => model.UserName)
+        </div>
+        <div class="field">
+            @Html.EditorFor(model => model.UserName)
+            @Html.ValidationMessageFor(model => model.UserName)
+        </div>
+
+        <div class="label">
+            @Html.LabelFor(model => model.Password)
+        </div>
+        <div class="editor-field">
+            @Html.PasswordFor(model => model.Password)
+            @Html.ValidationMessageFor(model => model.Password)
+        </div>
+
+    </fieldset>
+}

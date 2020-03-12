@@ -1,0 +1,124 @@
+﻿@model CountMeIn.ViewModels.EventItem
+
+@{
+    ViewBag.Title = "Ново събитие";
+    Html.EnableClientValidation(true);
+    @section scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+}
+
+<h2>@ViewBag.Title</h2>
+
+@using (Html.BeginForm(new { GroupID = CountMeIn.Core.SessionManager.BackToGroupID}))
+{
+    
+    @*@Html.AntiForgeryToken()
+        @Html.ValidationSummary(false)*@
+
+    <fieldset class="Form">
+        @*<legend>EventItem</legend>*@
+
+        <div class="label">
+            @Html.Encode(Resources.Common.EventName)
+        </div>
+        <div class="field">
+            @Html.EditorFor(model => model.Name)
+            @Html.ValidationMessageFor(model => model.Name)
+        </div>
+
+        <div class="label">
+            @Html.Encode(Resources.Common.EventLocation)
+        </div>
+        <div class="field">
+            @Html.EditorFor(model => model.Location)
+            @Html.ValidationMessageFor(model => model.Location)
+        </div>
+
+        <div class="label">
+            @Html.Encode(Resources.Common.EventStartDate)
+        </div>
+        <div class="field">
+            @Html.TextBoxFor(model => model.StartDate)
+            @*@Html.EditorFor(model => model.StartDate)*@
+            @Html.ValidationMessageFor(model => model.StartDate)
+        </div>
+
+        <div class="label">
+            @Html.Encode(Resources.Common.EventEndDate)
+        </div>
+        <div class="field">
+            @Html.TextBoxFor(model => model.EndDate)
+            @*@Html.EditorFor(model => model.EndDate)*@
+            @Html.ValidationMessageFor(model => model.EndDate)
+        </div>
+
+        <div class="label">
+            @Html.Encode(Resources.Common.EventStartHour)
+        </div>
+        <div class="field">
+            @Html.TextBoxFor(model => model.StartHour @*, new { Value = Model.StartHour.ToString("HH:mm") }*@)
+            @*@Html.EditorFor(model => model.StartHour)*@
+            @Html.ValidationMessageFor(model => model.StartHour)
+        </div>
+
+        <div class="label">
+            @Html.Encode(Resources.Common.EventEndHour)
+        </div>
+        <div class="field">
+            @Html.TextBoxFor(model => model.EndHour@*, new { Value = Model.EndHour.ToString("HH:mm") }*@)
+            @*@Html.EditorFor(model => model.EndHour)*@
+            @Html.ValidationMessageFor(model => model.EndHour)
+        </div>
+
+        <div class="label">
+            @Html.Encode(Resources.Common.EventHoursOffset)
+        </div>
+        <div class="field">
+            @*@Html.TextBoxFor(model => model.HoursOffset, null, new { min = 2, max = 22 })*@
+            @Html.EditorFor(model => model.HoursOffset)
+            @Html.ValidationMessageFor(model => model.HoursOffset)
+        </div>
+
+        <div class="label">
+            @Html.Encode(Resources.Common.EventMaxUsers + " за записване")
+        </div>
+        <div class="field">
+            @*@Html.TextBoxFor(model => model.MaxUsers, null, new { min = 2, max = 22 })*@
+            @Html.EditorFor(model => model.MaxUsers)
+            @Html.ValidationMessageFor(model => model.MaxUsers)
+        </div>
+
+        @*<div class="field">
+            @Html.DropDownListFor(Model => Model.IsPublic, CountMeIn.Configuration.ConfigurationSettings.EventPublicOptions)
+        </div>*@   
+
+        <div class="cl" style="margin-top: 20px"></div>
+        
+        <div class="field display-inline">
+            @Html.CheckBoxFor(model => model.IsPublic)
+        </div>   
+
+        <div class="label display-inline">
+            @Html.Encode(Resources.Common.Public)
+        </div>
+
+        <div class="cl margin-top"></div>
+
+            <p>
+                <input type="submit" value="@Resources.Common.Save" />
+            </p>
+
+            <div class="button float-right">
+                @Html.ActionLink(Resources.Common.Back, "GroupDetails", "Group", new { id = CountMeIn.Core.SessionManager.BackToGroupID }, null)
+                @*<a href="@Request.UrlReferrer.ToString()">@Resources.Common.Back</a>*@
+            </div>
+</fieldset>
+    
+}
+
+<div class="cl"></div>
+
+@*@section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }*@

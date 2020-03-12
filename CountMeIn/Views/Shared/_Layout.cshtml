@@ -1,0 +1,71 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>@ViewBag.Title - CountMeIn</title>
+        @*<link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+        <meta name="viewport" content="width=device-width" />*@
+        @Scripts.Render("~/bundles/jquery")
+        @Styles.Render("~/Content/css")
+        @Scripts.Render("~/bundles/modernizr")
+        @Scripts.Render("~/bundles/dropzone")
+
+    </head>
+    <body>  
+
+        <header>
+                <div class="float-left">
+                    <p class="site-title">
+                        @Html.ActionLink("Count Me In", "Index", "Home")
+                    </p>
+                </div>
+            <div class="cl"></div>
+                <div class="float-right">
+                    <section id="login">
+                        @Html.Partial("_LoginPartial")
+                    </section>  
+                </div>
+            <div class="cl"></div>
+        </header>
+        
+        <div class="center-line"></div>
+
+        @*@RenderSection("featured", required: false)*@
+        <div class="container">
+
+            <nav class="menu-container">
+                 <ul class="menu">
+                    <li>@Html.ActionLink(Resources.Common.Home, "Index", "Home")</li>
+                    <li>@Html.ActionLink(Resources.Common.Events, "EventsList", "Event")</li>
+                    <li>@Html.ActionLink(Resources.Common.About, "About", "Home")</li>
+                    <li>@Html.ActionLink(Resources.Common.Contact, "Contact", "Home")</li>
+                </ul>
+                <div class="cl"></div>
+            </nav>
+
+            <div class="cl"></div>
+            
+            <section>
+                @*class="content-wrapper main-content clear-fix"*@
+                @RenderBody()
+            </section>
+
+
+            <div class="dot"></div>
+
+            <footer>
+                <div class="content-wrapper">
+                        <p style="text-align:center">&copy; @DateTime.Now.Year - CountMeIn</p>
+                </div>
+            </footer>
+
+        </div>
+
+        <div class="arc"></div>
+        
+
+        @RenderSection("scripts", required: false)
+        
+  </body>
+
+</html>

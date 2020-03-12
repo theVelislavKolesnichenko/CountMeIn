@@ -1,0 +1,279 @@
+﻿<!--
+@model CountMeIn.ViewModels.EventItem
+    -->
+@{
+    ViewBag.Title = Html.Encode(Resources.Common.Event);
+    @*@section scripts {
+            @Scripts.Render("~/bundles/jqueryval")
+        }*@
+}
+
+<h2>@ViewBag.Title</h2>
+
+<fieldset>
+
+    <h1>
+        @Html.DisplayFor(model => model.Name)
+    </h1>
+
+    <div class="box-silent">
+
+        <section class="float-left">
+
+            <div class="label display-inline">
+                @Html.Encode(Resources.Common.EventLocation):
+            </div>
+            @Html.DisplayFor(model => model.Location)
+
+            <div class="cl margin-top"></div>
+
+            <div class="label display-inline">
+                @Html.Encode(Resources.Common.EventHoursOffset):
+            </div>
+            @Html.DisplayFor(model => model.HoursOffset)
+            @Html.Encode(Resources.Common.BeforeStart)
+
+            <div class="cl margin-top"></div>
+
+            <div class="label display-inline">
+                @Html.Encode(Resources.Common.EventMaxUsers):
+            </div>
+
+            @if (Model.MaxUsers != null && Model.MaxUsers != 0)
+            {
+                @Html.DisplayFor(model => model.MaxUsers)
+            }
+            else
+            {
+                @Html.Encode(Resources.Common.Unlimited)
+            }
+
+            <div class="cl margin-top"></div>
+
+            <div class="label display-inline">
+                @Html.Encode(Resources.Common.UserRecordeds):
+            </div>
+            @Html.DisplayFor(model => model.UsersCount)
+
+        </section>
+
+        <section class="float-right">
+            @*<div class="display-inline float-right">*@
+            <div class="label display-inline">
+                @Html.Encode(Resources.Common.Conduction):
+            </div>
+            @if (Model.StartDate == Model.EndDate)
+            {
+                @Model.StartDate @*.ToString("D", System.Globalization.CultureInfo.CreateSpecificCulture("bg-BG"))*@
+                @*@Html.DisplayFor(model => model.StartDate.ToString())*@
+            }
+            else
+            {
+                @Model.StartDate    @*.ToString("dd MMM", System.Globalization.CultureInfo.CreateSpecificCulture("bg-BG"))*@
+                @Html.Encode(" - ");
+                @Model.EndDate      @*.ToString("D", System.Globalization.CultureInfo.CreateSpecificCulture("bg-BG"))*@
+                @*@Html.DisplayFor(model => model.StartDate)
+                    @Html.Encode(" - ");
+                    @Html.DisplayFor(model => model.EndDate)*@
+
+            }
+            @*@Model.StartData.ToString("D", System.Globalization.CultureInfo.CreateSpecificCulture("bg-BG"))*@
+
+            <div class="cl margin-top"></div>
+
+            <div class="label display-inline">
+                @Html.Encode(Resources.Common.EventStartTime):
+            </div>
+            @Html.Encode(Model.StartHour)
+            @*@Html.DisplayFor(model => model.StartHour)*@
+
+            <div class="cl margin-top"></div>
+
+            <div class="label display-inline">
+                @Html.Encode(Resources.Common.EventEndTime):
+            </div>
+            @Html.Encode(Model.EndHour)
+            @*@Model.StartHour.ToString("T", System.Globalization.CultureInfo.CreateSpecificCulture("bg-BG"))*@
+            @*@Html.DisplayFor(model => model.EndHour)*@
+
+            <div class="cl"></div>
+
+            @if (DateTime.Parse(Model.EndDate).Date < DateTime.Today.Date)
+            {
+                <div class="float-right">
+                    <p class="validation-summary-errors margin-top" style="width: auto">
+                        @Html.Encode(Resources.Common.EventOld)
+                    </p>
+                </div>
+            }
+            else if (DateTime.Parse(Model.StartDate).Date < DateTime.Today.Date || (DateTime.Parse(Model.StartDate).Date == DateTime.Today.Date && (DateTime.Parse(Model.StartHour).Hour - Model.HoursOffset) <= DateTime.Now.Hour))
+            {
+                <div class="float-right">
+                    <p class="validation-summary-errors margin-top">
+                        @Html.Encode(Resources.Common.HoursOffsetOver)
+                    </p>
+                </div>
+            }
+            else if (Model.Users.Any(e => e.ID == CountMeIn.Core.SessionManager.UserID))
+            {
+                <div class="button float-right">
+                    @Html.ActionLink(Resources.Common.LogOff, "UnsubscribeAnEvent", new { userId = CountMeIn.Core.SessionManager.UserID, eventId = Model.ID })
+                </div>
+            }
+            else if (Model.Users.Count() < Model.MaxUsers || Model.MaxUsers == null)
+            {
+                <div class="button float-right">
+                    @Html.ActionLink(Resources.Common.JoinAnEvent, "JoinAnEvent", new { id = Model.ID, groupID = Model.GroupID })
+                </div>
+            }
+            else
+            {
+                <div class="float-right">
+                    <p class="validation-summary-errors">
+                        @Html.Encode(Resources.Common.AllFilled)
+                    </p>
+                </div>
+            }
+
+        </section>
+
+        <div class="cl"></div>
+
+    </div>
+
+    @if (!string.IsNullOrEmpty(CountMeIn.Core.SessionManager.ReturnUrl))
+    {
+        <div class="button float-right margin-right">
+            @*, new { currentPage = CountMeIn.Core.SessionManager.EventListPageNumber }*@
+        <a href="@CountMeIn.Core.SessionManager.ReturnUrl">@Resources.Common.Back</a>
+    </div>
+    }
+    else
+    {
+        <div class="button float-right margin-right">
+            @*, new { currentPage = CountMeIn.Core.SessionManager.EventListPageNumber }*@
+        @Html.ActionLink(Resources.Common.Back, "EventsList", "Event")
+    </div>
+    }
+
+
+    @if (BLL.PermissionManager.HasPermission(CountMeIn.Core.SessionManager.UserID, DML.Enums.PermissionsItem.CanEditEvent)
+        || BLL.GroupManager.IsOwner(CountMeIn.Core.SessionManager.UserID, Model.GroupID)
+        || Model.OwnerID == CountMeIn.Core.SessionManager.UserID)
+    {
+        <div class="button float-left margin-left">
+            @Html.ActionLink(Resources.Common.Changes, "EventEdit", new { id = Model.ID })
+        </div>
+    }
+
+    @if (Model.Users.Count != 0)
+    {
+
+        <div class="cl"></div>
+
+        <div class="label" style="text-align: center">
+            @Html.Encode(Resources.Common.UserRecordeds)
+        </div>
+
+        bool CanDeleteEventUsers = BLL.PermissionManager.HasPermission(CountMeIn.Core.SessionManager.UserID, DML.Enums.PermissionsItem.CanDeleteEventUsers);
+        int index = 0;
+
+        <div class="margin-top"></div>
+
+        <table class="center-block">
+            <thead>
+                <tr>
+                    <td>
+                        <div class="font-weight-bold">
+                            @Html.Encode(Resources.Common.Index)
+                        </div>
+                    </td>
+                    <td>
+                        <div class="font-weight-bold">
+                            @Html.Encode(Resources.Common.FirsName)
+                        </div>
+                    </td>
+                    @if (DateTime.Parse(Model.EndDate) < DateTime.Today)
+                    {
+                        <td>
+                            @Html.Encode("Рейтинг")
+                        </td>
+                    }
+                    @if (CanDeleteEventUsers || BLL.GroupManager.IsOwner(CountMeIn.Core.SessionManager.UserID, Model.GroupID) || Model.OwnerID == CountMeIn.Core.SessionManager.UserID)
+                    {
+                        <td>
+                            <div class="font-weight-bold">
+                                @Html.Encode(Resources.Common.Option)
+                            </div>
+                        </td>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Users)
+                {
+                    <tr class=@((index % 2 == 0) ? "box-loud" : "box-silent")>
+                        @*id="@index" draggable="true" ondragstart="drag(event)"*@
+                        <td>
+                            <div>
+                                @Html.Encode(++index)
+                            </div>
+                        </td>
+                        <td>
+                            <img src="@CountMeIn.Configuration.ConfigurationSettings.ImegPath(item.ProfileImageName, DML.Enums.ImageSize.Small)" alt="Sample Image" />
+                            @Html.ActionLink(string.Format("{0} {1}", item.FirstName, item.LastName), "Profile", "User", new { id = item.ID }, null)
+                        </td>
+                        @if (DateTime.Parse(Model.EndDate) < DateTime.Today)
+                        {
+                            <td>
+                                @Html.Encode("Рейтинг")
+                            </td>
+                        }
+
+                        @if (CanDeleteEventUsers || BLL.GroupManager.IsOwner(CountMeIn.Core.SessionManager.UserID, Model.GroupID) || Model.OwnerID == CountMeIn.Core.SessionManager.UserID)
+                        {
+                            <td>
+                                <div class="imgbuttonred">
+                                    @Html.ActionLink("✖", "UnsubscribeAnEvent", new { userId = item.ID, eventid = Model.ID, onclick = "return confirm('Сигурни ли сте, че искате да премахнете този потребител?');" })
+                                    @* <a href="javascript:if(confirm('Сигурни ли сте, че искате да изтриете този потребител?')) { return '/Event/UnsubscribeAnEvent?userId=@item.ID&amp;eventid=@Model.ID'}">X</a>*@
+                                    @*@Html.ActionLink("X", "UnsubscribeAnEvent", new { userId = item.ID, eventid = Model.ID }, new { href = "javascript:if(confirm('Сигурни ли сте, че искате да изтриете този потребител?')){ '/Event/UnsubscribeAnEvent?userId=1&amp;eventid=10' };" })*@
+                                </div>
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+    @*@using (Html.BeginForm())
+        {
+            <table>
+                <tr>
+                    <td id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></td>
+                </tr>
+            </table>
+        }*@
+
+    @section scripts
+    {
+        <script>
+            function allowDrop(ev) {
+                ev.preventDefault();
+            }
+
+            function drag(ev) {
+                ev.dataTransfer.setData("Text", ev.target.id);
+            }
+
+            function drop(ev) {
+                if (ev.target.id == "div1") {
+                    ev.preventDefault();
+                    var data = ev.dataTransfer.getData("Text");
+                    ev.target.appendChild(document.getElementById(data));
+                }
+            }
+        </script>
+    }
+
+</fieldset>

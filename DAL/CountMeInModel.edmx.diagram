@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="dc8117584c6e48bf959a6eeea39c64d8" Name="Diagram1">
+        <EntityTypeShape EntityType="CountMeInModel.UsersToEvent" Width="1.5" PointX="12.75" PointY="9.125" />
+        <EntityTypeShape EntityType="CountMeInModel.Event" Width="1.5" PointX="10.5" PointY="8.375" />
+        <EntityTypeShape EntityType="CountMeInModel.GroupInvite" Width="1.5" PointX="10.5" PointY="13.375" />
+        <EntityTypeShape EntityType="CountMeInModel.GroupRole" Width="1.5" PointX="11.25" PointY="5.25" />
+        <EntityTypeShape EntityType="CountMeInModel.Group" Width="1.5" PointX="8.25" PointY="8.875" />
+        <EntityTypeShape EntityType="CountMeInModel.Permission" Width="1.5" PointX="3.75" PointY="5.375" />
+        <EntityTypeShape EntityType="CountMeInModel.User" Width="1.5" PointX="6" PointY="8.5" />
+        <EntityTypeShape EntityType="CountMeInModel.UsersToGroup" Width="1.5" PointX="13.5" PointY="5.875" />
+        <EntityTypeShape EntityType="CountMeInModel.UserType" Width="1.5" PointX="3.75" PointY="9.125" />
+        <EntityTypeShape EntityType="CountMeInModel.UserTypesToPermission" Width="1.5" PointX="6" PointY="5.125" />
+        <AssociationConnector Association="CountMeInModel.FK_Events_Groups" />
+        <AssociationConnector Association="CountMeInModel.FK_Events_Users" />
+        <AssociationConnector Association="CountMeInModel.FK_UsersToEvents_Events" />
+        <AssociationConnector Association="CountMeInModel.FK_GroupInvites_Groups" />
+        <AssociationConnector Association="CountMeInModel.FK_UsersToGroups_GroupRoles" />
+        <AssociationConnector Association="CountMeInModel.FK_Groups_Users" />
+        <AssociationConnector Association="CountMeInModel.FK_UsersToGroups_Groups" />
+        <AssociationConnector Association="CountMeInModel.FK_UserTypesToPermissions_Permissions" />
+        <AssociationConnector Association="CountMeInModel.FK_Users_UserTypes" />
+        <AssociationConnector Association="CountMeInModel.FK_UsersToEvents_Users" />
+        <AssociationConnector Association="CountMeInModel.FK_UsersToGroups_Users" />
+        <AssociationConnector Association="CountMeInModel.FK_UserTypesToPermissions_UserTypes" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

@@ -1,0 +1,411 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="About" xml:space="preserve">
+    <value>За проекта</value>
+  </data>
+  <data name="Contact" xml:space="preserve">
+    <value>Контакти</value>
+  </data>
+  <data name="Event" xml:space="preserve">
+    <value>Събитие</value>
+  </data>
+  <data name="EventEndTime" xml:space="preserve">
+    <value>Край</value>
+  </data>
+  <data name="EventHoursOffset" xml:space="preserve">
+    <value>Срок за записване</value>
+  </data>
+  <data name="EventLocation" xml:space="preserve">
+    <value>Място на провеждане</value>
+  </data>
+  <data name="EventMaxUsers" xml:space="preserve">
+    <value>Места</value>
+  </data>
+  <data name="EventName" xml:space="preserve">
+    <value>Име на събитие</value>
+  </data>
+  <data name="Events" xml:space="preserve">
+    <value>Събития</value>
+  </data>
+  <data name="EventStartTime" xml:space="preserve">
+    <value>Начало</value>
+  </data>
+  <data name="Home" xml:space="preserve">
+    <value>Начало</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Назад</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Грешка</value>
+  </data>
+  <data name="ErrorNotEvent" xml:space="preserve">
+    <value>Липсват такива събития</value>
+  </data>
+  <data name="Review" xml:space="preserve">
+    <value>Преглед</value>
+  </data>
+  <data name="UserNameError" xml:space="preserve">
+    <value>Моля въведете коректно потребителско име</value>
+  </data>
+  <data name="ConfirmPassword" xml:space="preserve">
+    <value>Повторете паролата</value>
+  </data>
+  <data name="CreateAccount" xml:space="preserve">
+    <value>Създаване на нов акаунт</value>
+  </data>
+  <data name="FirsName" xml:space="preserve">
+    <value>Име</value>
+  </data>
+  <data name="Hello" xml:space="preserve">
+    <value>Здравейте</value>
+  </data>
+  <data name="Input" xml:space="preserve">
+    <value>Въведете</value>
+  </data>
+  <data name="LastName" xml:space="preserve">
+    <value>Фамилия</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>Вход</value>
+  </data>
+  <data name="LogOff" xml:space="preserve">
+    <value>Отписване</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Парола</value>
+  </data>
+  <data name="PasswordLengthError" xml:space="preserve">
+    <value>Въведете по дълга парола</value>
+  </data>
+  <data name="Register" xml:space="preserve">
+    <value>Регистрация</value>
+  </data>
+  <data name="Required" xml:space="preserve">
+    <value>Задължително поле</value>
+  </data>
+  <data name="UserName" xml:space="preserve">
+    <value>Потребителско име</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Запиши</value>
+  </data>
+  <data name="EventEndDate" xml:space="preserve">
+    <value>Крайна дата на събитието</value>
+  </data>
+  <data name="EventEndHour" xml:space="preserve">
+    <value>Краен час на събитието</value>
+  </data>
+  <data name="EventStartDate" xml:space="preserve">
+    <value>Начална дата да събитието</value>
+  </data>
+  <data name="EventStartHour" xml:space="preserve">
+    <value>Начален час на събитието</value>
+  </data>
+  <data name="Number" xml:space="preserve">
+    <value>Въведете числена стойност по голяма от 0 и по малко 22</value>
+  </data>
+  <data name="NumberUser" xml:space="preserve">
+    <value>Въведете числена стойност от 0 до 22 </value>
+  </data>
+  <data name="Manage" xml:space="preserve">
+    <value>Профил</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>Е-поща</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Създай</value>
+  </data>
+  <data name="EventFreePlaces" xml:space="preserve">
+    <value>Свободни места</value>
+  </data>
+  <data name="NewPassword" xml:space="preserve">
+    <value>Нова парола</value>
+  </data>
+  <data name="Conduction" xml:space="preserve">
+    <value>Период на провеждане</value>
+  </data>
+  <data name="AllFilled" xml:space="preserve">
+    <value>Всички места са запълнени</value>
+  </data>
+  <data name="BeforeStart" xml:space="preserve">
+    <value>ч Преди началото</value>
+  </data>
+  <data name="Changes" xml:space="preserve">
+    <value>Промени</value>
+  </data>
+  <data name="ChangesSuccessfully" xml:space="preserve">
+    <value>Промените бяха направени успешно</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Изтриване</value>
+  </data>
+  <data name="EditProfile" xml:space="preserve">
+    <value>Редактирай профила</value>
+  </data>
+  <data name="EventOld" xml:space="preserve">
+    <value>Събитието е отминало</value>
+  </data>
+  <data name="HoursOffsetOver" xml:space="preserve">
+    <value>Времето за записване изтече</value>
+  </data>
+  <data name="Index" xml:space="preserve">
+    <value>Номер</value>
+  </data>
+  <data name="InvalidData" xml:space="preserve">
+    <value>Невалидни данни</value>
+  </data>
+  <data name="JoinAnEvent" xml:space="preserve">
+    <value>Присъединяване</value>
+  </data>
+  <data name="MaxUsersFull" xml:space="preserve">
+    <value>Записали са се повече</value>
+  </data>
+  <data name="Option" xml:space="preserve">
+    <value>Опция</value>
+  </data>
+  <data name="PasswordInvalid" xml:space="preserve">
+    <value>Невалидна парола</value>
+  </data>
+  <data name="PosswordSame" xml:space="preserve">
+    <value>Паролите не са еднакви!</value>
+  </data>
+  <data name="SpecialSettings" xml:space="preserve">
+    <value>Специални настройки</value>
+  </data>
+  <data name="SuccessfullyRegistered" xml:space="preserve">
+    <value>Успешно се регистрирахте!</value>
+  </data>
+  <data name="Unlimited" xml:space="preserve">
+    <value>Неограничени</value>
+  </data>
+  <data name="UserDelete" xml:space="preserve">
+    <value>Изтриване на потребител</value>
+  </data>
+  <data name="UserNamePassword" xml:space="preserve">
+    <value>Невалидно потребителско име или парола !</value>
+  </data>
+  <data name="UserRecordeds" xml:space="preserve">
+    <value>Записани</value>
+  </data>
+  <data name="UserType" xml:space="preserve">
+    <value>Вид потребител</value>
+  </data>
+  <data name="Welcome" xml:space="preserve">
+    <value>Добре дошли!</value>
+  </data>
+  <data name="NonEvents" xml:space="preserve">
+    <value>Няма събития</value>
+  </data>
+  <data name="Group" xml:space="preserve">
+    <value>Група</value>
+  </data>
+  <data name="Invite" xml:space="preserve">
+    <value>Покани</value>
+  </data>
+  <data name="Invited" xml:space="preserve">
+    <value>Поканен</value>
+  </data>
+  <data name="InviteUser" xml:space="preserve">
+    <value>Поканете потребител</value>
+  </data>
+  <data name="Member" xml:space="preserve">
+    <value>Член</value>
+  </data>
+  <data name="Moderator" xml:space="preserve">
+    <value>Модератор</value>
+  </data>
+  <data name="NotPublic" xml:space="preserve">
+    <value>Частно</value>
+  </data>
+  <data name="Public" xml:space="preserve">
+    <value>Публичнo</value>
+  </data>
+  <data name="ChangeFullNameSuccess" xml:space="preserve">
+    <value>Името Ви беше промененo успешно</value>
+  </data>
+  <data name="ChangePasswordSuccess" xml:space="preserve">
+    <value>Паролата беше промененo успешно</value>
+  </data>
+  <data name="ChangeUserNameSuccess" xml:space="preserve">
+    <value>Потребителското Ви име беше промененo успешно</value>
+  </data>
+  <data name="ChangeUserTypeSuccess" xml:space="preserve">
+    <value>Потребителския тип беше променен успешно</value>
+  </data>
+  <data name="dropZoneCancelUpload" xml:space="preserve">
+    <value>Спри</value>
+  </data>
+  <data name="dropZoneCancelUploadConfirmation" xml:space="preserve">
+    <value>Сигурни ли сте че искате да спрете качването?</value>
+  </data>
+  <data name="dropZoneInvalidFileType" xml:space="preserve">
+    <value>Невариден тип на файла</value>
+  </data>
+  <data name="dropZoneMaxFilesExceeded" xml:space="preserve">
+    <value>Не може да качвате повече снимки</value>
+  </data>
+  <data name="dropZoneRemoveFile" xml:space="preserve">
+    <value>Премахни</value>
+  </data>
+  <data name="GroupIsCreate" xml:space="preserve">
+    <value>Групата вече съществува</value>
+  </data>
+  <data name="UserIsInviteGroup" xml:space="preserve">
+    <value>Вече е член на групата</value>
+  </data>
+  <data name="MoreEvent" xml:space="preserve">
+    <value>Още събития</value>
+  </data>
+  <data name="NextEvent" xml:space="preserve">
+    <value>Предстоящи събития</value>
+  </data>
+  <data name="NoNextEvent" xml:space="preserve">
+    <value>Няма предстоящи събития</value>
+  </data>
+  <data name="NotMemberOfGroups" xml:space="preserve">
+    <value>Не членувяате в Групи</value>
+  </data>
+  <data name="ThisUserNotMemberOfGroups" xml:space="preserve">
+    <value>Този потребител не членува в Групи</value>
+  </data>
+  <data name="GroupOwner" xml:space="preserve">
+    <value>Не може да напуснете група на която сте собственик</value>
+  </data>
+  <data name="View" xml:space="preserve">
+    <value>Преглед</value>
+  </data>
+  <data name="dropZoneInvalidSize" xml:space="preserve">
+    <value>Качете снимка в размер 250х250</value>
+  </data>
+  <data name="ProfileImage" xml:space="preserve">
+    <value>Профилна снимка</value>
+  </data>
+  <data name="RequiresPassword" xml:space="preserve">
+    <value>Изисква парола</value>
+  </data>
+  <data name="UploadImage" xml:space="preserve">
+    <value>Качете снимка</value>
+  </data>
+  <data name="MailError" xml:space="preserve">
+    <value>Молч въведете коректен е-мейл адрес</value>
+  </data>
+</root>

@@ -1,0 +1,18 @@
+﻿@if (!string.IsNullOrEmpty(CountMeIn.Core.SessionManager.UserFullName)) 
+{
+    <text>
+        @Resources.Common.Hello, @Html.ActionLink(CountMeIn.Core.SessionManager.UserFullName, "Profile", "User", new { id = CountMeIn.Core.SessionManager.UserID }, htmlAttributes: new { @class = "username", title = Resources.Common.Manage })!
+        @using (Html.BeginForm("LogOff", "User", FormMethod.Post, new { id = "logoutForm" }))
+        {
+                @Html.AntiForgeryToken()
+                <a href="javascript:document.getElementById('logoutForm').submit()">@Resources.Common.LogOff</a>
+        }
+    </text>
+} 
+else 
+{
+    <ul>
+        <li>@Html.ActionLink(Resources.Common.Register, "Register", "User", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+        <li>@Html.ActionLink(Resources.Common.Login, "Login", "User", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+    </ul>
+}

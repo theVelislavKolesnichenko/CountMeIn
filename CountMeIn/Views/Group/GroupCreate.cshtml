@@ -1,0 +1,43 @@
+﻿@model CountMeIn.ViewModels.GroupItem
+
+@{
+    ViewBag.Title = string.Format("{0} {1}", Resources.Common.Create, Resources.Common.Group);
+}
+@section scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+<h2>@ViewBag.Title</h2>
+
+@using (Html.BeginForm()) {
+    
+    @*@Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)*@
+
+    <fieldset class="Form">
+
+        <div class="label">
+            @Resources.Common.FirsName
+        </div>
+
+        <div class="display-inline">
+            @Html.EditorFor(model => model.Name)
+            @Html.ValidationMessageFor(model => model.Name)
+            <input type="submit" value=@Resources.Common.Create />
+
+            <div class="button float-right">
+                @Html.ActionLink(Resources.Common.Back, "Profile", "User", new { id = CountMeIn.Core.SessionManager.UserID }, null)
+            </div>
+
+        </div>
+
+    </fieldset>
+}
+
+@*<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}*@

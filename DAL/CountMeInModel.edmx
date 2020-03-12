@@ -1,0 +1,784 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="CountMeInModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+        <EntityType Name="Events">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Location" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="StartTime" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="EndTime" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="HoursOffset" Type="int" Nullable="false" />
+          <Property Name="MaxUsers" Type="int" />
+          <Property Name="GroupID" Type="int" Nullable="false" />
+          <Property Name="OwnerID" Type="int" Nullable="false" />
+          <Property Name="IsPublic" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="GroupInvites">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserMail" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="GroupID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="GroupRoles">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="IsModerator" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Groups">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="OwnerID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Permissions">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Password" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="UserTypeID" Type="int" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="25" Nullable="false" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="25" Nullable="false" />
+          <Property Name="ProfileImageName" Type="varchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="UsersToEvents">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserID" Type="int" Nullable="false" />
+          <Property Name="EventID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UsersToGroups">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="GroupID" Type="int" Nullable="false" />
+          <Property Name="UserID" Type="int" Nullable="false" />
+          <Property Name="GroupRoleID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserTypes">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="IsAdmin" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserTypesToPermissions">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserTypeID" Type="int" Nullable="false" />
+          <Property Name="PermissionID" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Events_Groups">
+          <End Role="Groups" Type="Self.Groups" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Events" Type="Self.Events" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Groups">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Events">
+              <PropertyRef Name="GroupID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Events_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Events" Type="Self.Events" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Events">
+              <PropertyRef Name="OwnerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GroupInvites_Groups">
+          <End Role="Groups" Type="Self.Groups" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="GroupInvites" Type="Self.GroupInvites" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Groups">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="GroupInvites">
+              <PropertyRef Name="GroupID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Groups_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Groups" Type="Self.Groups" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Groups">
+              <PropertyRef Name="OwnerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Users_UserTypes">
+          <End Role="UserTypes" Type="Self.UserTypes" Multiplicity="1" />
+          <End Role="Users" Type="Self.Users" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserTypes">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Users">
+              <PropertyRef Name="UserTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UsersToEvents_Events">
+          <End Role="Events" Type="Self.Events" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="UsersToEvents" Type="Self.UsersToEvents" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Events">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="UsersToEvents">
+              <PropertyRef Name="EventID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UsersToEvents_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="UsersToEvents" Type="Self.UsersToEvents" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="UsersToEvents">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UsersToGroups_GroupRoles">
+          <End Role="GroupRoles" Type="Self.GroupRoles" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="UsersToGroups" Type="Self.UsersToGroups" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GroupRoles">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="UsersToGroups">
+              <PropertyRef Name="GroupRoleID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UsersToGroups_Groups">
+          <End Role="Groups" Type="Self.Groups" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="UsersToGroups" Type="Self.UsersToGroups" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Groups">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="UsersToGroups">
+              <PropertyRef Name="GroupID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UsersToGroups_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="UsersToGroups" Type="Self.UsersToGroups" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="UsersToGroups">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserTypesToPermissions_Permissions">
+          <End Role="Permissions" Type="Self.Permissions" Multiplicity="1" />
+          <End Role="UserTypesToPermissions" Type="Self.UserTypesToPermissions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Permissions">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="UserTypesToPermissions">
+              <PropertyRef Name="PermissionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserTypesToPermissions_UserTypes">
+          <End Role="UserTypes" Type="Self.UserTypes" Multiplicity="1" />
+          <End Role="UserTypesToPermissions" Type="Self.UserTypesToPermissions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserTypes">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="UserTypesToPermissions">
+              <PropertyRef Name="UserTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="CountMeInModelStoreContainer">
+          <EntitySet Name="Events" EntityType="Self.Events" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GroupInvites" EntityType="Self.GroupInvites" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GroupRoles" EntityType="Self.GroupRoles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Groups" EntityType="Self.Groups" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Permissions" EntityType="Self.Permissions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UsersToEvents" EntityType="Self.UsersToEvents" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UsersToGroups" EntityType="Self.UsersToGroups" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserTypes" EntityType="Self.UserTypes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserTypesToPermissions" EntityType="Self.UserTypesToPermissions" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Events_Groups" Association="Self.FK_Events_Groups">
+            <End Role="Groups" EntitySet="Groups" />
+            <End Role="Events" EntitySet="Events" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Events_Users" Association="Self.FK_Events_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Events" EntitySet="Events" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GroupInvites_Groups" Association="Self.FK_GroupInvites_Groups">
+            <End Role="Groups" EntitySet="Groups" />
+            <End Role="GroupInvites" EntitySet="GroupInvites" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Groups_Users" Association="Self.FK_Groups_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Groups" EntitySet="Groups" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Users_UserTypes" Association="Self.FK_Users_UserTypes">
+            <End Role="UserTypes" EntitySet="UserTypes" />
+            <End Role="Users" EntitySet="Users" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UsersToEvents_Events" Association="Self.FK_UsersToEvents_Events">
+            <End Role="Events" EntitySet="Events" />
+            <End Role="UsersToEvents" EntitySet="UsersToEvents" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UsersToEvents_Users" Association="Self.FK_UsersToEvents_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="UsersToEvents" EntitySet="UsersToEvents" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UsersToGroups_GroupRoles" Association="Self.FK_UsersToGroups_GroupRoles">
+            <End Role="GroupRoles" EntitySet="GroupRoles" />
+            <End Role="UsersToGroups" EntitySet="UsersToGroups" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UsersToGroups_Groups" Association="Self.FK_UsersToGroups_Groups">
+            <End Role="Groups" EntitySet="Groups" />
+            <End Role="UsersToGroups" EntitySet="UsersToGroups" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UsersToGroups_Users" Association="Self.FK_UsersToGroups_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="UsersToGroups" EntitySet="UsersToGroups" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserTypesToPermissions_Permissions" Association="Self.FK_UserTypesToPermissions_Permissions">
+            <End Role="Permissions" EntitySet="Permissions" />
+            <End Role="UserTypesToPermissions" EntitySet="UserTypesToPermissions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserTypesToPermissions_UserTypes" Association="Self.FK_UserTypesToPermissions_UserTypes">
+            <End Role="UserTypes" EntitySet="UserTypes" />
+            <End Role="UserTypesToPermissions" EntitySet="UserTypesToPermissions" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="CountMeInModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+        <EntityContainer Name="CountMeInEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="UsersToEvents" EntityType="CountMeInModel.UsersToEvent" />
+          <EntitySet Name="Events" EntityType="CountMeInModel.Event" />
+          <EntitySet Name="GroupInvites" EntityType="CountMeInModel.GroupInvite" />
+          <EntitySet Name="GroupRoles" EntityType="CountMeInModel.GroupRole" />
+          <EntitySet Name="Groups" EntityType="CountMeInModel.Group" />
+          <EntitySet Name="Permissions" EntityType="CountMeInModel.Permission" />
+          <EntitySet Name="Users" EntityType="CountMeInModel.User" />
+          <EntitySet Name="UsersToGroups" EntityType="CountMeInModel.UsersToGroup" />
+          <EntitySet Name="UserTypes" EntityType="CountMeInModel.UserType" />
+          <EntitySet Name="UserTypesToPermissions" EntityType="CountMeInModel.UserTypesToPermission" />
+          <AssociationSet Name="FK_Events_Groups" Association="CountMeInModel.FK_Events_Groups">
+            <End Role="Group" EntitySet="Groups" />
+            <End Role="Event" EntitySet="Events" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Events_Users" Association="CountMeInModel.FK_Events_Users">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Event" EntitySet="Events" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UsersToEvents_Events" Association="CountMeInModel.FK_UsersToEvents_Events">
+            <End Role="Event" EntitySet="Events" />
+            <End Role="UsersToEvent" EntitySet="UsersToEvents" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GroupInvites_Groups" Association="CountMeInModel.FK_GroupInvites_Groups">
+            <End Role="Group" EntitySet="Groups" />
+            <End Role="GroupInvite" EntitySet="GroupInvites" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UsersToGroups_GroupRoles" Association="CountMeInModel.FK_UsersToGroups_GroupRoles">
+            <End Role="GroupRole" EntitySet="GroupRoles" />
+            <End Role="UsersToGroup" EntitySet="UsersToGroups" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Groups_Users" Association="CountMeInModel.FK_Groups_Users">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Group" EntitySet="Groups" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UsersToGroups_Groups" Association="CountMeInModel.FK_UsersToGroups_Groups">
+            <End Role="Group" EntitySet="Groups" />
+            <End Role="UsersToGroup" EntitySet="UsersToGroups" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserTypesToPermissions_Permissions" Association="CountMeInModel.FK_UserTypesToPermissions_Permissions">
+            <End Role="Permission" EntitySet="Permissions" />
+            <End Role="UserTypesToPermission" EntitySet="UserTypesToPermissions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Users_UserTypes" Association="CountMeInModel.FK_Users_UserTypes">
+            <End Role="UserType" EntitySet="UserTypes" />
+            <End Role="User" EntitySet="Users" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UsersToEvents_Users" Association="CountMeInModel.FK_UsersToEvents_Users">
+            <End Role="User" EntitySet="Users" />
+            <End Role="UsersToEvent" EntitySet="UsersToEvents" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UsersToGroups_Users" Association="CountMeInModel.FK_UsersToGroups_Users">
+            <End Role="User" EntitySet="Users" />
+            <End Role="UsersToGroup" EntitySet="UsersToGroups" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserTypesToPermissions_UserTypes" Association="CountMeInModel.FK_UserTypesToPermissions_UserTypes">
+            <End Role="UserType" EntitySet="UserTypes" />
+            <End Role="UserTypesToPermission" EntitySet="UserTypesToPermissions" />
+          </AssociationSet>
+          </EntityContainer>
+        <EntityType Name="UsersToEvent">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserID" Type="Int32" Nullable="false" />
+          <Property Name="EventID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Event" Relationship="CountMeInModel.FK_UsersToEvents_Events" FromRole="UsersToEvent" ToRole="Event" />
+          <NavigationProperty Name="User" Relationship="CountMeInModel.FK_UsersToEvents_Users" FromRole="UsersToEvent" ToRole="User" />
+          </EntityType>
+        <EntityType Name="Event">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Location" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="StartTime" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="EndTime" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="HoursOffset" Type="Int32" Nullable="false" />
+          <Property Name="MaxUsers" Type="Int32" />
+          <Property Name="GroupID" Type="Int32" Nullable="false" />
+          <Property Name="OwnerID" Type="Int32" Nullable="false" />
+          <Property Name="IsPublic" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Group" Relationship="CountMeInModel.FK_Events_Groups" FromRole="Event" ToRole="Group" />
+          <NavigationProperty Name="User" Relationship="CountMeInModel.FK_Events_Users" FromRole="Event" ToRole="User" />
+          <NavigationProperty Name="UsersToEvents" Relationship="CountMeInModel.FK_UsersToEvents_Events" FromRole="Event" ToRole="UsersToEvent" />
+        </EntityType>
+        <EntityType Name="GroupInvite">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserMail" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="GroupID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Group" Relationship="CountMeInModel.FK_GroupInvites_Groups" FromRole="GroupInvite" ToRole="Group" />
+        </EntityType>
+        <EntityType Name="GroupRole">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="IsModerator" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="UsersToGroups" Relationship="CountMeInModel.FK_UsersToGroups_GroupRoles" FromRole="GroupRole" ToRole="UsersToGroup" />
+        </EntityType>
+        <EntityType Name="Group">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="OwnerID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Events" Relationship="CountMeInModel.FK_Events_Groups" FromRole="Group" ToRole="Event" />
+          <NavigationProperty Name="GroupInvites" Relationship="CountMeInModel.FK_GroupInvites_Groups" FromRole="Group" ToRole="GroupInvite" />
+          <NavigationProperty Name="User" Relationship="CountMeInModel.FK_Groups_Users" FromRole="Group" ToRole="User" />
+          <NavigationProperty Name="UsersToGroups" Relationship="CountMeInModel.FK_UsersToGroups_Groups" FromRole="Group" ToRole="UsersToGroup" />
+        </EntityType>
+        <EntityType Name="Permission">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="UserTypesToPermissions" Relationship="CountMeInModel.FK_UserTypesToPermissions_Permissions" FromRole="Permission" ToRole="UserTypesToPermission" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Password" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="UserTypeID" Type="Int32" Nullable="false" />
+          <Property Name="FirstName" Type="String" Nullable="false" MaxLength="25" FixedLength="false" Unicode="true" />
+          <Property Name="LastName" Type="String" Nullable="false" MaxLength="25" FixedLength="false" Unicode="true" />
+          <Property Name="ProfileImageName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Events" Relationship="CountMeInModel.FK_Events_Users" FromRole="User" ToRole="Event" />
+          <NavigationProperty Name="Groups" Relationship="CountMeInModel.FK_Groups_Users" FromRole="User" ToRole="Group" />
+          <NavigationProperty Name="UserType" Relationship="CountMeInModel.FK_Users_UserTypes" FromRole="User" ToRole="UserType" />
+          <NavigationProperty Name="UsersToEvents" Relationship="CountMeInModel.FK_UsersToEvents_Users" FromRole="User" ToRole="UsersToEvent" />
+          <NavigationProperty Name="UsersToGroups" Relationship="CountMeInModel.FK_UsersToGroups_Users" FromRole="User" ToRole="UsersToGroup" />
+        </EntityType>
+        <EntityType Name="UsersToGroup">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="GroupID" Type="Int32" Nullable="false" />
+          <Property Name="UserID" Type="Int32" Nullable="false" />
+          <Property Name="GroupRoleID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="GroupRole" Relationship="CountMeInModel.FK_UsersToGroups_GroupRoles" FromRole="UsersToGroup" ToRole="GroupRole" />
+          <NavigationProperty Name="Group" Relationship="CountMeInModel.FK_UsersToGroups_Groups" FromRole="UsersToGroup" ToRole="Group" />
+          <NavigationProperty Name="User" Relationship="CountMeInModel.FK_UsersToGroups_Users" FromRole="UsersToGroup" ToRole="User" />
+        </EntityType>
+        <EntityType Name="UserType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="IsAdmin" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Users" Relationship="CountMeInModel.FK_Users_UserTypes" FromRole="UserType" ToRole="User" />
+          <NavigationProperty Name="UserTypesToPermissions" Relationship="CountMeInModel.FK_UserTypesToPermissions_UserTypes" FromRole="UserType" ToRole="UserTypesToPermission" />
+        </EntityType>
+        <EntityType Name="UserTypesToPermission">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserTypeID" Type="Int32" Nullable="false" />
+          <Property Name="PermissionID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Permission" Relationship="CountMeInModel.FK_UserTypesToPermissions_Permissions" FromRole="UserTypesToPermission" ToRole="Permission" />
+          <NavigationProperty Name="UserType" Relationship="CountMeInModel.FK_UserTypesToPermissions_UserTypes" FromRole="UserTypesToPermission" ToRole="UserType" />
+        </EntityType>
+        <Association Name="FK_Events_Groups">
+          <End Type="CountMeInModel.Group" Role="Group" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="CountMeInModel.Event" Role="Event" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Group">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Event">
+              <PropertyRef Name="GroupID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Events_Users">
+          <End Type="CountMeInModel.User" Role="User" Multiplicity="1" />
+          <End Type="CountMeInModel.Event" Role="Event" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Event">
+              <PropertyRef Name="OwnerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UsersToEvents_Events">
+          <End Type="CountMeInModel.Event" Role="Event" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="CountMeInModel.UsersToEvent" Role="UsersToEvent" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Event">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="UsersToEvent">
+              <PropertyRef Name="EventID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GroupInvites_Groups">
+          <End Type="CountMeInModel.Group" Role="Group" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="CountMeInModel.GroupInvite" Role="GroupInvite" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Group">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="GroupInvite">
+              <PropertyRef Name="GroupID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UsersToGroups_GroupRoles">
+          <End Type="CountMeInModel.GroupRole" Role="GroupRole" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="CountMeInModel.UsersToGroup" Role="UsersToGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GroupRole">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="UsersToGroup">
+              <PropertyRef Name="GroupRoleID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Groups_Users">
+          <End Type="CountMeInModel.User" Role="User" Multiplicity="1" />
+          <End Type="CountMeInModel.Group" Role="Group" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Group">
+              <PropertyRef Name="OwnerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UsersToGroups_Groups">
+          <End Type="CountMeInModel.Group" Role="Group" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="CountMeInModel.UsersToGroup" Role="UsersToGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Group">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="UsersToGroup">
+              <PropertyRef Name="GroupID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserTypesToPermissions_Permissions">
+          <End Type="CountMeInModel.Permission" Role="Permission" Multiplicity="1" />
+          <End Type="CountMeInModel.UserTypesToPermission" Role="UserTypesToPermission" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Permission">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="UserTypesToPermission">
+              <PropertyRef Name="PermissionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Users_UserTypes">
+          <End Type="CountMeInModel.UserType" Role="UserType" Multiplicity="1" />
+          <End Type="CountMeInModel.User" Role="User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="User">
+              <PropertyRef Name="UserTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UsersToEvents_Users">
+          <End Type="CountMeInModel.User" Role="User" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="CountMeInModel.UsersToEvent" Role="UsersToEvent" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="UsersToEvent">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UsersToGroups_Users">
+          <End Type="CountMeInModel.User" Role="User" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="CountMeInModel.UsersToGroup" Role="UsersToGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="UsersToGroup">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserTypesToPermissions_UserTypes">
+          <End Type="CountMeInModel.UserType" Role="UserType" Multiplicity="1" />
+          <End Type="CountMeInModel.UserTypesToPermission" Role="UserTypesToPermission" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="UserTypesToPermission">
+              <PropertyRef Name="UserTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="CountMeInModelStoreContainer" CdmEntityContainer="CountMeInEntities">
+          <EntitySetMapping Name="UsersToEvents">
+            <EntityTypeMapping TypeName="CountMeInModel.UsersToEvent">
+              <MappingFragment StoreEntitySet="UsersToEvents">
+                <ScalarProperty Name="EventID" ColumnName="EventID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Events">
+            <EntityTypeMapping TypeName="CountMeInModel.Event">
+              <MappingFragment StoreEntitySet="Events">
+                <ScalarProperty Name="IsPublic" ColumnName="IsPublic" />
+                <ScalarProperty Name="OwnerID" ColumnName="OwnerID" />
+                <ScalarProperty Name="GroupID" ColumnName="GroupID" />
+                <ScalarProperty Name="MaxUsers" ColumnName="MaxUsers" />
+                <ScalarProperty Name="HoursOffset" ColumnName="HoursOffset" />
+                <ScalarProperty Name="EndTime" ColumnName="EndTime" />
+                <ScalarProperty Name="StartTime" ColumnName="StartTime" />
+                <ScalarProperty Name="Location" ColumnName="Location" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GroupInvites">
+            <EntityTypeMapping TypeName="CountMeInModel.GroupInvite">
+              <MappingFragment StoreEntitySet="GroupInvites">
+                <ScalarProperty Name="GroupID" ColumnName="GroupID" />
+                <ScalarProperty Name="UserMail" ColumnName="UserMail" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GroupRoles">
+            <EntityTypeMapping TypeName="CountMeInModel.GroupRole">
+              <MappingFragment StoreEntitySet="GroupRoles">
+                <ScalarProperty Name="IsModerator" ColumnName="IsModerator" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Groups">
+            <EntityTypeMapping TypeName="CountMeInModel.Group">
+              <MappingFragment StoreEntitySet="Groups">
+                <ScalarProperty Name="OwnerID" ColumnName="OwnerID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Permissions">
+            <EntityTypeMapping TypeName="CountMeInModel.Permission">
+              <MappingFragment StoreEntitySet="Permissions">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="CountMeInModel.User">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="ProfileImageName" ColumnName="ProfileImageName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="UserTypeID" ColumnName="UserTypeID" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UsersToGroups">
+            <EntityTypeMapping TypeName="CountMeInModel.UsersToGroup">
+              <MappingFragment StoreEntitySet="UsersToGroups">
+                <ScalarProperty Name="GroupRoleID" ColumnName="GroupRoleID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="GroupID" ColumnName="GroupID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserTypes">
+            <EntityTypeMapping TypeName="CountMeInModel.UserType">
+              <MappingFragment StoreEntitySet="UserTypes">
+                <ScalarProperty Name="IsAdmin" ColumnName="IsAdmin" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserTypesToPermissions">
+            <EntityTypeMapping TypeName="CountMeInModel.UserTypesToPermission">
+              <MappingFragment StoreEntitySet="UserTypesToPermissions">
+                <ScalarProperty Name="PermissionID" ColumnName="PermissionID" />
+                <ScalarProperty Name="UserTypeID" ColumnName="UserTypeID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
